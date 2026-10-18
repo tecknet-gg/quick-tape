@@ -1,7 +1,22 @@
 [project]
-name = "quick-tape-new"
+name = "quick-tape"
 version = "0.1.0"
-description = "Add your description here"
+description = "A cassette utility"
 readme = "README.md"
 requires-python = ">=3.14"
-dependencies = []
+dependencies = [
+    "deezer-python>=7.4.0",
+    "pyside6>=6.12.0",
+]
+authors = [
+    {name="tecknet"}
+]
+
+[build-system]
+requires = ["uv_build>=0.13.1,<0.14"]
+build-backend = "uv_build"
+
+[project.scripts]
+main = "quick_tape.__main__:main"
+
+
