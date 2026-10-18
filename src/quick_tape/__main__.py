@@ -1,9 +1,13 @@
-import quick_tape.ui.main_window as main_window
+import sys
+from PySide6.QtWidgets import QApplication
+from quick_tape.ui.main_window import MainWindow
 
 
 def main():
-    print("hello!")
-    main_window.main()
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    app.exec()
 
 
 if __name__ == "__main__":
