@@ -1,5 +1,6 @@
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLineEdit, QPushButton
-
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLineEdit, QPushButton, QScrollArea
+from quick_tape.ui.components.release_card import ReleaseCard
+from quick_tape.core.search import search
 
 class SearchPage(QWidget):
     def __init__(self):
@@ -17,7 +18,28 @@ class SearchPage(QWidget):
         self.search_layout.addWidget(self.search_input)
         self.search_layout.addWidget(self.search_button)
 
-        self.layout.addLayout(self.search_layout)
-        self.layout.addStretch()
+        self.results_layout = QVBoxLayout()
 
-        self.setLayout(self.layout)
+        self.layout.addLayout(self.search_layout)
+
+
+    def on_search(self):
+        query = self.search_input.text()
+        if not query:
+            return
+
+
+        results = search(query)
+
+        while self.results_layout.count():
+            item = self.results_layout.takeAt(0)
+
+            if item.widget():
+                item.widget().deleteLater()
+
+
+        for result in results:
+            card = ReleaseCard(result)
+            self.results_layout.addWidget(card)
+
+        self.results_layout.addStretch()
