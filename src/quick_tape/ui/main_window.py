@@ -1,6 +1,9 @@
-from PySide6.QtWidgets import QMainWindow, QWidget, QPushButton, QHBoxLayout, QVBoxLayout, \
+from PySide6.QtWidgets import QMainWindow, QWidget, QHBoxLayout, QVBoxLayout, \
     QStackedWidget, QFrame
+
+from quick_tape.ui.pages.search_page import SearchPage
 from quick_tape.ui.sidebar import Sidebar
+from quick_tape.ui.pages import *
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -31,13 +34,16 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.central_widget)
 
         # connect signals
-        self.sidebar.search_button.clicked.connect(self.open_search)
-        self.sidebar.prepare_button.clicked.connect(self.open_prepare)
-        self.sidebar.record_button.clicked.connect(self.open_record)
-        self.sidebar.library_button.clicked.connect(self.open_library)
-        self.sidebar.register_button.clicked.connect(self.open_register)
-        self.sidebar.jobs_button.clicked.connect(self.open_jobs)
-        self.sidebar.settings_button.clicked.connect(self.open_settings)
+        self.sidebar.nav_search.clicked.connect(self.open_search)
+        self.sidebar.nav_prepare.clicked.connect(self.open_prepare)
+        self.sidebar.nav_record.clicked.connect(self.open_record)
+        self.sidebar.nav_library.clicked.connect(self.open_library)
+        self.sidebar.nav_register.clicked.connect(self.open_register)
+        self.sidebar.nav_jobs.clicked.connect(self.open_jobs)
+        self.sidebar.nav_settings.clicked.connect(self.open_settings)
+
+        self.search_page = SearchPage()
+        self.pages.addWidget(self.search_page)
 
     def open_search(self):
         self.pages.setCurrentIndex(0)

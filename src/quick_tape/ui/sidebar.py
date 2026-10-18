@@ -10,22 +10,22 @@ class Sidebar(QWidget):
         self.setMinimumWidth(180)
 
 
-        self.search_button = self.init_button(text="search")
-        self.prepare_button = self.init_button(text="prepare")
-        self.record_button = self.init_button(text="record")
-        self.library_button = self.init_button(text="library")
-        self.register_button = self.init_button(text="register")
-        self.jobs_button = self.init_button(text="jobs")
-        self.settings_button = self.init_button(text="settings")
+        self.nav_search = self.init_button(text="search")
+        self.nav_prepare = self.init_button(text="prepare")
+        self.nav_record = self.init_button(text="record")
+        self.nav_library = self.init_button(text="library")
+        self.nav_register = self.init_button(text="register")
+        self.nav_jobs = self.init_button(text="jobs")
+        self.nav_settings = self.init_button(text="settings")
 
         button = [
-            self.search_button,
-            self.prepare_button,
-            self.record_button,
-            self.library_button,
-            self.register_button,
-            self.jobs_button,
-            self.settings_button
+            self.nav_search,
+            self.nav_prepare,
+            self.nav_record,
+            self.nav_library,
+            self.nav_register,
+            self.nav_jobs,
+            self.nav_settings
         ]
 
         for button in button:
