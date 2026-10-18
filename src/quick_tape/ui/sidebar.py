@@ -9,18 +9,29 @@ class Sidebar(QWidget):
 
         self.setMinimumWidth(180)
 
+        buttons = []
 
-        self.search_button = QPushButton("Search")
-        self.search_button.setMinimumHeight(50)
-        self.search_button.setMinimumWidth(50)
-        self.layout.addWidget(self.search_button)
+        buttons.append(self.init_button(text="search"))
+        buttons.append(self.init_button(text="prepare"))
+        buttons.append(self.init_button(text="record"))
+        buttons.append(self.init_button(text="library"))
+        buttons.append(self.init_button(text="register"))
+        buttons.append(self.init_button(text="jobs"))
+        buttons.append(self.init_button(text="settings"))
 
-        self.record_button = QPushButton("Record")
-        self.record_button.setMinimumHeight(50)
-        self.record_button.setMinimumWidth(50)
-        self.layout.addWidget(self.record_button)
+        for button in buttons:
+            self.layout.addWidget(button)
 
         self.layout.addStretch()
 
         self.setLayout(self.layout)
+
+    def init_button(self, text:str, min_height:int=50, min_width:int=50):
+        button = QPushButton(text)
+        button.setMinimumHeight(min_height)
+        button.setMinimumWidth(min_width)
+        return button
+
+
+
 
