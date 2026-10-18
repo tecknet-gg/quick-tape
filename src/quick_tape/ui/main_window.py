@@ -30,5 +30,43 @@ class MainWindow(QMainWindow):
         self.central_widget.setLayout(self.central_layout)
         self.setCentralWidget(self.central_widget)
 
+        # connect signals
+        self.sidebar.search_button.clicked.connect(self.open_search)
+        self.sidebar.prepare_button.clicked.connect(self.open_prepare)
+        self.sidebar.record_button.clicked.connect(self.open_record)
+        self.sidebar.library_button.clicked.connect(self.open_library)
+        self.sidebar.register_button.clicked.connect(self.open_register)
+        self.sidebar.jobs_button.clicked.connect(self.open_jobs)
+        self.sidebar.settings_button.clicked.connect(self.open_settings)
+
+    def open_search(self):
+        self.pages.setCurrentIndex(0)
+        print("opening search")
+
+    def open_prepare(self):
+        self.pages.setCurrentIndex(1)
+        print("opening prepare")
+
+    def open_record(self):
+        self.pages.setCurrentIndex(2)
+        print("opening record")
+
+    def open_library(self):
+        self.pages.setCurrentIndex(3)
+        print("opening library")
+
+    def open_register(self):
+        self.pages.setCurrentIndex(4)
+        print("opening register")
+
+    def open_jobs(self):
+        self.pages.setCurrentIndex(5)
+        print("opening jobs")
+
+    def open_settings(self):
+        self.pages.setCurrentIndex(6)
+        print("opening settings")
+
+
 
 
