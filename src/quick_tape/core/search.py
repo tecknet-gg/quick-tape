@@ -1,10 +1,14 @@
 import deezer as dz
+from quick_tape.ui.components.release_card import ReleaseCard
 
-def search(release: str, artist: str | None=None):
-    with dz.Client() as client:
-        query = f"{release} {artist}"
-        results = client.search_albums(query)
-        return [result for result in results]
+
+def search(query: str) -> deezer.pagination.PaginatedList:
+    client = dz.Client()
+    query = f"{query}"
+    results = client.search_albums(query)
+    return [result for result in results]
+
 
 if __name__ == "__main__":
-    print(search("Oh Inverted World", "The Shins"))
+    print(search(query="Hayley Williams")[0].title)
+
