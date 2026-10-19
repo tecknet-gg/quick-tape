@@ -8,6 +8,7 @@ dependencies = [
     "deezer-python>=7.4.0",
     "platformdirs>=4.13.5",
     "pyside6>=6.12.0",
+    "requests>=2.34.2",
     "tomli-w>=1.2.0",
 ]
 authors = [

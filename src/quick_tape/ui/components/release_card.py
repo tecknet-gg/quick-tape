@@ -1,6 +1,8 @@
+from PySide6.QtGui import QPixmap, Qt
 from PySide6.QtWidgets import QFrame, QHBoxLayout, QLabel, QVBoxLayout
-from PySide6.QtCore import Qt
-import deezer
+import requests
+
+
 
 
 class ReleaseCard(QFrame):
@@ -9,7 +11,7 @@ class ReleaseCard(QFrame):
 
         self.title = release.title
         self.artist = release.artist.name
-        self.cover = release.cover_small
+        self.cover_url = release.cover_xl
         self.num_tracks = release.nb_tracks
         self.tracklist = release.get_tracks()
         self.release_date = getattr(release, "release_date", None) or "Unknown"
@@ -18,42 +20,43 @@ class ReleaseCard(QFrame):
         #print(self.release_date)
 
         main_layout = QHBoxLayout(self)
-        main_layout.setContentsMargins(12,12,12,12)
+        main_layout.setContentsMargins(12, 12, 12, 12)
         main_layout.setSpacing(16)
 
-        self.setObjectName("releaseCard")
-
-        self.cover_image = QLabel()
-        self.cover_image.setMinimumSize(140,140)
+        self.cover_image = QLabel("Loading cover image")
         self.cover_image.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.cover_image.setText("Loading artwork")
+        self.cover_image.setFixedSize(140, 140) # let it scale later
 
-        self.cover_image.setObjectName("albumArt")
 
+        response = requests.get(self.cover_url)
+        response.raise_for_status()
+
+        pixmap = QPixmap()
+        pixmap.loadFromData(response.content)
+
+        self.cover_image.setPixmap(
+            pixmap.scaled(
+                self.cover_image.size(),
+                Qt.AspectRatioMode.KeepAspectRatio,
+                Qt.TransformationMode.SmoothTransformation
+            )
+        )
+
+
+        self.cover_image.setFixedSize(140, 140)
         main_layout.addWidget(self.cover_image)
 
-        content_layout = QVBoxLayout()
-        content_layout.setSpacing(6)
+        self.content_info = QVBoxLayout()
+        main_layout.addLayout(self.content_info, 1)
 
         self.title_label = QLabel(self.title)
-        self.title_label.setObjectName("releaseTitle")
         self.title_label.setWordWrap(True)
+        self.content_info.addWidget(self.title_label)
 
         self.artist_label = QLabel(self.artist)
-        self.artist_label.setObjectName("releaseArtist")
         self.artist_label.setWordWrap(True)
+        self.content_info.addWidget(self.artist_label)
 
-        #self.release_date_label = QLabel(self.release_date)
-        #self.release_date_label.setObjectName("releaseDate")
-
-
-        content_layout.addWidget(self.title_label)
-        content_layout.addWidget(self.artist_label)
-
-
-        content_layout.addStretch()
-
-        main_layout.addLayout(content_layout)
 
 
 
