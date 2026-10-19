@@ -23,7 +23,7 @@ class SearchPage(QWidget):
         self.search_button.clicked.connect(self.on_search)
 
         self.release_list = ReleaseScroll()
-        self.layout.addWidget(self.release_list)
+        self.layout.addWidget(self.release_list, 1)
 
         self.layout.addStretch()
         self.setLayout(self.layout)
