@@ -1,9 +1,6 @@
 from PySide6.QtGui import QPixmap, Qt
-from PySide6.QtWidgets import QFrame, QHBoxLayout, QLabel, QVBoxLayout, QPushButton
+from PySide6.QtWidgets import QFrame, QHBoxLayout, QLabel, QVBoxLayout, QPushButton, QWidget
 import requests
-
-
-
 
 class ReleaseCard(QFrame):
     def __init__(self, release):
@@ -14,75 +11,98 @@ class ReleaseCard(QFrame):
         self.cover_url = release.cover_xl
         self.num_tracks = release.nb_tracks
         self.tracklist = release.get_tracks()
-        self.duration = f"{round(release.duration/60, 1)} minutes" # format duration better
+        self.duration = f"{round(release.duration / 60, 1)} minutes"
         self.release_date = str(getattr(release, "release_date", None) or "Unknown")
 
-        #print(self.title, self.artist, self.cover, self.tracklist, self.num_tracks)
-        #print(self.release_date)
+        self.tracks_shown = False
 
-        main_layout = QHBoxLayout(self)
-        main_layout.setContentsMargins(12, 12, 12, 12)
-        main_layout.setSpacing(16)
+        self.main_layout = QVBoxLayout(self)
+        self.main_layout.setContentsMargins(12, 12, 12, 12)
+        self.main_layout.setSpacing(10)
+
+
+        self.top_layout = QHBoxLayout()
+        self.top_layout.setSpacing(16)
 
         self.cover_image = QLabel("Loading cover image")
         self.cover_image.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.cover_image.setFixedSize(140, 140) # let it scale later
+        self.cover_image.setFixedSize(140, 140)
+
+        self.top_layout.addWidget(self.cover_image)
+
+        self.content_info_main = QVBoxLayout()
+
+        self.content_info_main.addWidget(QLabel(self.title))
+        self.content_info_main.addWidget(QLabel(self.artist))
+
+        metadata_layout = QHBoxLayout()
+        metadata_layout.addWidget(QLabel(self.duration))
+        metadata_layout.addWidget(QLabel(f"{self.num_tracks} tracks"))
+
+        self.content_info_main.addLayout(metadata_layout)
+        self.content_info_main.addWidget(QLabel(self.release_date))
+
+        self.top_layout.addLayout(self.content_info_main, 1)
+        self.main_layout.addLayout(self.top_layout)
+
+
+        self.track_list_widget = QWidget()
+        self.track_list_layout = QVBoxLayout(self.track_list_widget)
+        self.track_list_layout.setContentsMargins(0, 0, 0, 0)
+        self.track_list_widget.hide()
+
+
+        self.show_tracks_button = QPushButton("Show tracks")
+        self.download_release_button = QPushButton("Download release")
+
+        self.main_layout.addWidget(self.show_tracks_button)
+        self.main_layout.addWidget(self.track_list_widget)
+        self.main_layout.addWidget(self.download_release_button)
+
+        self.show_tracks_button.clicked.connect(self.show_tracks)
+        self.download_release_button.clicked.connect(self.download_release)
 
 
         response = requests.get(self.cover_url)
         response.raise_for_status()
 
         pixmap = QPixmap()
-        pixmap.loadFromData(response.content)
-
-        self.cover_image.setPixmap(
-            pixmap.scaled(
-                self.cover_image.size(),
-                Qt.AspectRatioMode.KeepAspectRatio,
-                Qt.TransformationMode.SmoothTransformation
+        if pixmap.loadFromData(response.content):
+            self.cover_image.setPixmap(
+                pixmap.scaled(
+                    self.cover_image.size(),
+                    Qt.AspectRatioMode.KeepAspectRatio,
+                    Qt.TransformationMode.SmoothTransformation,
+                )
             )
-        )
+        else:
+            self.cover_image.setText("Artwork unavailable")
 
-        main_layout.addWidget(self.cover_image)
-        self.content_info_main = QVBoxLayout()
-
-        layer_1 = QHBoxLayout()
-        title = QLabel(self.title)
-        layer_1.addWidget(title)
-
-        layer_2 = QHBoxLayout()
-        artist = QLabel(self.artist)
-        layer_2.addWidget(artist)
-
-        layer_3 = QHBoxLayout()
-        duration = QLabel(self.duration)
-        track_count = QLabel(f"{self.num_tracks} tracks")
-
-        layer_3.addWidget(duration)
-        layer_3.addWidget(track_count)
-
-        layer_4 = QHBoxLayout()
-        release_date = QLabel(self.release_date)
-        layer_4.addWidget(release_date)
-
-        self.content_info_main.addLayout(layer_1)
-        self.content_info_main.addLayout(layer_2)
-        self.content_info_main.addLayout(layer_3)
-        self.content_info_main.addLayout(layer_4)
-
-        self.show_tracks_button = QPushButton("Show tracks")
-        self.content_info_main.addWidget(self.show_tracks_button)
-        #self.content_info_main.addStretch()
-
-        self.download_release_button = QPushButton("Download release")
-        self.content_info_main.addWidget(self.download_release_button)
-
-        self.show_tracks_button.clicked.connect(self.show_tracks)
-
-        main_layout.addLayout(self.content_info_main, 1)
 
     def show_tracks(self):
-        print(self.tracklist)
+        if self.tracks_shown:
+            self.show_tracks_button.setText("Show tracks")
+            self.track_list_widget.hide()
+            self.tracks_shown = False
+            return
+
+        self.show_tracks_button.setText("Hide tracks")
+        self.tracks_shown = True
+
+        if self.track_list_layout.count() == 0:
+            for i, track in enumerate(self.tracklist):
+                track_layout = QHBoxLayout()
+
+                track_title = QLabel(track.title)
+                track_duration = QLabel(f"{round(track.duration/60, 1)} minutes")
+
+                track_layout.addWidget(track_title)
+                track_layout.addWidget(track_duration)
+
+                self.track_list_layout.addLayout(track_layout)
+
+        self.track_list_widget.show()
+
 
     def download_release(self):
         pass
