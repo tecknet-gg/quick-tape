@@ -1,5 +1,5 @@
 from PySide6.QtGui import QPixmap, Qt
-from PySide6.QtWidgets import QFrame, QHBoxLayout, QLabel, QVBoxLayout
+from PySide6.QtWidgets import QFrame, QHBoxLayout, QLabel, QVBoxLayout, QPushButton
 import requests
 
 
@@ -14,7 +14,8 @@ class ReleaseCard(QFrame):
         self.cover_url = release.cover_xl
         self.num_tracks = release.nb_tracks
         self.tracklist = release.get_tracks()
-        self.release_date = getattr(release, "release_date", None) or "Unknown"
+        self.duration = f"{round(release.duration/60, 1)} minutes" # format duration better
+        self.release_date = str(getattr(release, "release_date", None) or "Unknown")
 
         #print(self.title, self.artist, self.cover, self.tracklist, self.num_tracks)
         #print(self.release_date)
@@ -42,20 +43,49 @@ class ReleaseCard(QFrame):
             )
         )
 
-
-        self.cover_image.setFixedSize(140, 140)
         main_layout.addWidget(self.cover_image)
+        self.content_info_main = QVBoxLayout()
 
-        self.content_info = QVBoxLayout()
-        main_layout.addLayout(self.content_info, 1)
+        layer_1 = QHBoxLayout()
+        title = QLabel(self.title)
+        layer_1.addWidget(title)
 
-        self.title_label = QLabel(self.title)
-        self.title_label.setWordWrap(True)
-        self.content_info.addWidget(self.title_label)
+        layer_2 = QHBoxLayout()
+        artist = QLabel(self.artist)
+        layer_2.addWidget(artist)
 
-        self.artist_label = QLabel(self.artist)
-        self.artist_label.setWordWrap(True)
-        self.content_info.addWidget(self.artist_label)
+        layer_3 = QHBoxLayout()
+        duration = QLabel(self.duration)
+        track_count = QLabel(f"{self.num_tracks} tracks")
+
+        layer_3.addWidget(duration)
+        layer_3.addWidget(track_count)
+
+        layer_4 = QHBoxLayout()
+        release_date = QLabel(self.release_date)
+        layer_4.addWidget(release_date)
+
+        self.content_info_main.addLayout(layer_1)
+        self.content_info_main.addLayout(layer_2)
+        self.content_info_main.addLayout(layer_3)
+        self.content_info_main.addLayout(layer_4)
+
+        self.show_tracks_button = QPushButton("Show tracks")
+        self.content_info_main.addWidget(self.show_tracks_button)
+        #self.content_info_main.addStretch()
+
+        self.download_release_button = QPushButton("Download release")
+        self.content_info_main.addWidget(self.download_release_button)
+
+        self.show_tracks_button.clicked.connect(self.show_tracks)
+
+        main_layout.addLayout(self.content_info_main, 1)
+
+    def show_tracks(self):
+        print(self.tracklist)
+
+    def download_release(self):
+        pass
 
 
 

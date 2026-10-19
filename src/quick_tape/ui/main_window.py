@@ -4,6 +4,8 @@ from PySide6.QtWidgets import QMainWindow, QWidget, QHBoxLayout, QVBoxLayout, \
 from quick_tape.ui.pages.search_page import SearchPage
 from quick_tape.ui.components.sidebar import Sidebar
 from quick_tape.ui.pages import *
+from quick_tape.ui.pages.settings_page import SettingsPage
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -26,7 +28,9 @@ class MainWindow(QMainWindow):
 
         self.pages = QStackedWidget()
         self.search_page = SearchPage()
+        self.settings_page = SettingsPage()
         self.pages.addWidget(self.search_page) #add search page
+        self.pages.addWidget(self.settings_page)
 
     def init_layout(self):
         self.central_widget = QWidget()
@@ -61,7 +65,7 @@ class MainWindow(QMainWindow):
         print("opening search")
 
     def open_prepare(self):
-        self.pages.setCurrentIndex(1)
+        self.pages.setCurrentIndex(6)
         print("opening prepare")
 
     def open_record(self):
@@ -81,7 +85,7 @@ class MainWindow(QMainWindow):
         print("opening jobs")
 
     def open_settings(self):
-        self.pages.setCurrentIndex(6)
+        self.pages.setCurrentIndex(1)
         print("opening settings")
 
 
