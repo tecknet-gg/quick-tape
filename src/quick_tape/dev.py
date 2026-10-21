@@ -8,7 +8,9 @@ def main():
         run_process(
             ".",
             target=run_app,
-            watch_filter=None
+            watch_filter=None,
+            debounce=3000,
+            step=1000
         )
     except KeyboardInterrupt:
         print("Exiting...")
