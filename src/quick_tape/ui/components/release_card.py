@@ -11,8 +11,23 @@ class ReleaseCard(QFrame):
         self.cover_url = release.cover_xl
         self.num_tracks = release.nb_tracks
         self.tracklist = release.get_tracks()
-        self.duration = f"{round(release.duration / 60, 1)} minutes"
+        self.duration = release.duration
         self.release_date = str(getattr(release, "release_date", None) or "Unknown")
+
+        if self.release_date != "Unknown" and self.release_date is not None:
+            year, month, day = self.release_date.split("-")
+            self.release_date = f"{day}/{month}/{year}"
+
+        minutes = self.duration // 60
+        seconds = self.duration % 60
+
+        if minutes<10:
+            minutes = f"0{minutes}"
+        if seconds<10:
+            seconds = f"0{seconds}"
+
+        self.duration = f"{minutes}:{seconds}"
+
 
         self.tracks_shown = False
 
@@ -94,7 +109,16 @@ class ReleaseCard(QFrame):
                 track_layout = QHBoxLayout()
 
                 track_title = QLabel(track.title)
-                track_duration = QLabel(f"{round(track.duration/60, 1)} minutes")
+
+                minutes = track.duration // 60
+                seconds = track.duration % 60
+                if minutes<10:
+                    minutes = f"0{minutes}"
+                if seconds<10:
+                    seconds = f"0{seconds}"
+
+
+                track_duration = QLabel(f"{minutes}:{seconds}")
 
                 track_layout.addWidget(track_title)
                 track_layout.addWidget(track_duration)
