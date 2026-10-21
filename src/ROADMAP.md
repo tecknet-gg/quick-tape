@@ -3,7 +3,7 @@
 Before v1.0.0:
 - [x] search deezer for releases
 - [x] metadata and tracklist display in search results
-- [ ] settings pane
+- [x] settings pane - barebones directory selection
 - [ ] yt-dlp resolver and downloader
 - [ ] multithreaded job handler
 - [ ] download queue
