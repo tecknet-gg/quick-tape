@@ -9,7 +9,7 @@ CONFIG_FILE = Path(CONFIG_DIR) / "config.toml"
 
 DEFAULT_CONFIG = {
     "download": {
-        "path": Path(user_documents_path()) / "quick-tape",
+        "path": str(user_documents_path() / "quick-tape"),
     }
 }
 
@@ -22,8 +22,10 @@ def load_config() -> dict:
         return tomllib.load(f)
 
 
-def save_config(config: dict) -> dict:
+def save_config(config: dict) -> None:
     CONFIG_DIR.mkdir(parents=True, exist_ok=True)
     with CONFIG_FILE.open("wb") as f:
         tomli_w.dump(config, f)
+
+
 
