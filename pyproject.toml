@@ -10,6 +10,7 @@ dependencies = [
     "pyside6>=6.12.0",
     "requests>=2.34.2",
     "tomli-w>=1.2.0",
+    "watchfiles>=1.3.0",
 ]
 authors = [
     {name="tecknet"}
@@ -21,5 +22,6 @@ build-backend = "uv_build"
 
 [project.scripts]
 main = "quick_tape.__main__:main"
+dev = "dev:main"
 
 
