@@ -3,9 +3,6 @@ import sys
 
 from watchfiles import run_process
 
-def run_app():
-    subprocess.run([sys.executable, "src/quick_tape/__main__.py"], check=False)
-
 def main():
     try:
         run_process(
@@ -15,6 +12,11 @@ def main():
         )
     except KeyboardInterrupt:
         print("Exiting...")
+
+def run_app():
+    subprocess.run([sys.executable, "src/quick_tape/__main__.py"], check=False)
+
+
 
 if __name__ == "__main__":
     main()

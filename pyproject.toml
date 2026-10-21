@@ -22,6 +22,6 @@ build-backend = "uv_build"
 
 [project.scripts]
 main = "quick_tape.__main__:main"
-dev = "dev:main"
+dev = "quick_tape.dev:main"
 
 
