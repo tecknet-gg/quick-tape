@@ -1,16 +1,19 @@
 from PySide6.QtGui import QPixmap, Qt
-from PySide6.QtWidgets import QFrame, QHBoxLayout, QLabel, QVBoxLayout, QPushButton, QWidget
+from PySide6.QtWidgets import QFrame, QHBoxLayout, QLabel, QVBoxLayout, QPushButton, QWidget, QSizePolicy
 import requests
 
 class ReleaseCard(QFrame):
     def __init__(self, release):
         super().__init__()
 
+
+        self.release = release
+
         self.title = release.title
         self.artist = release.artist.name
         self.cover_url = release.cover_xl
         self.num_tracks = release.nb_tracks
-        self.tracklist = release.get_tracks()
+        self.tracklist = None
         self.duration = release.duration
         self.release_date = str(getattr(release, "release_date", None) or "Unknown")
 
@@ -67,6 +70,13 @@ class ReleaseCard(QFrame):
         self.track_list_widget.hide()
 
 
+        self.track_list_widget.setMinimumWidth(0)
+        self.track_list_widget.setSizePolicy(
+            QSizePolicy.Policy.Ignored,
+            QSizePolicy.Policy.Preferred,
+        )
+
+
         self.show_tracks_button = QPushButton("Show tracks")
         self.download_release_button = QPushButton("Download release")
 
@@ -104,11 +114,24 @@ class ReleaseCard(QFrame):
         self.show_tracks_button.setText("Hide tracks")
         self.tracks_shown = True
 
+        if self.tracklist is None:
+            self.tracklist = self.release.tracklist
+
         if self.track_list_layout.count() == 0:
             for i, track in enumerate(self.tracklist):
                 track_layout = QHBoxLayout()
 
+                track_layout.setContentsMargins(0, 0, 0, 0)
+                track_layout.setSpacing(8)
+
                 track_title = QLabel(track.title)
+                track_title.setAlignment(Qt.AlignmentFlag.AlignLeft)
+                track_title.setWordWrap(True)
+                track_title.setMinimumWidth(0)
+                track_title.setSizePolicy(
+                    QSizePolicy.Policy.Preferred,
+                    QSizePolicy.Policy.Preferred
+                )
 
                 minutes = track.duration // 60
                 seconds = track.duration % 60
@@ -119,8 +142,12 @@ class ReleaseCard(QFrame):
 
 
                 track_duration = QLabel(f"{minutes}:{seconds}")
+                track_duration.setSizePolicy(
+                    QSizePolicy.Policy.Fixed,
+                    QSizePolicy.Policy.Fixed,
+                )
 
-                track_layout.addWidget(track_title)
+                track_layout.addWidget(track_title, 1)
                 track_layout.addWidget(track_duration)
 
                 self.track_list_layout.addLayout(track_layout)
