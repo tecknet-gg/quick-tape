@@ -10,6 +10,9 @@ CONFIG_FILE = Path(CONFIG_DIR) / "config.toml"
 DEFAULT_CONFIG = {
     "download": {
         "path": str(user_documents_path() / "quick-tape"),
+    },
+    "prepare": {
+        "cassette-type": {"label": "C60", "value": 60}
     }
 }
 
